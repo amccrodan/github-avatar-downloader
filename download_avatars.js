@@ -7,15 +7,17 @@ var GITHUB_TOKEN = "581cc3110dadb29e6abeec829e6beb65f5b422a4";
 // Requests a JSON-formatted array of contributors to a certain repo on GitHub
 function getRepoContributors(repoOwner, repoName, cb) {
   var options = {
-    url : 'https://'+ GITHUB_USER + ':' + GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors',
+    url: 'https://' + GITHUB_USER + ':' + GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors',
     headers: {
-      'User-Agent' : "GitHub Avatar Downloader - Student Project"
+      'User-Agent': "GitHub Avatar Downloader - Student Project"
     }
-  }
+  };
 
   request.get(options, function (error, response, body) {
-    console.log(error);
-    console.log(response.headers['x-ratelimit-remaining']);
+    if (error) {
+      console.log(error);
+      return;
+    }
     cb(error, JSON.parse(body));
   });
 }
@@ -27,7 +29,10 @@ function downloadImageByURL(url, filePath) {
    .on('error', function (err) {
      throw err;
    })
-   .pipe(fs.createWriteStream(filePath));
+   .pipe(fs.createWriteStream(filePath))
+   .on('finish', function () {
+    console.log('Downloaded ' + filePath);
+   })
 }
 
 
@@ -40,9 +45,9 @@ var myArgs = process.argv.slice(2);
 
 // Check to make sure two arguments have been passed in
 if (myArgs.length !== 2) {
-  console.log("Please enter exactly 2 arguments, in the form <owner> <repo>.");
-  return;
+  throw new Error('Please enter exactly 2 arguments, in the form <owner> <repo>.');
 }
+
 
 // Call the main function with command line input
 getRepoContributors(myArgs[0], myArgs[1], function(err, result) {
