@@ -15,10 +15,11 @@ function getRepoContributors(repoOwner, repoName, cb) {
   }
 
   request.get(options, function (error, response, body) {
+    console.log(error);
+    console.log(response.headers['x-ratelimit-remaining']);
     cb(error, JSON.parse(body));
   });
 }
-
 
 function downloadImageByURL(url, filePath) {
 
@@ -29,9 +30,14 @@ function downloadImageByURL(url, filePath) {
    .pipe(fs.createWriteStream(filePath));
 }
 
+var myArgs = process.argv.slice(2);
 
-getRepoContributors("jquery", "jquery", function(err, result) {
-  console.log("Errors:", err);
+if (myArgs.length !== 2) {
+  console.log("Please enter exactly 2 arguments, in the form <owner> <repo>.");
+  return;
+}
+
+getRepoContributors(myArgs[0], myArgs[1], function(err, result) {
 
   if (!fs.existsSync('./avatars')) {
     fs.mkdirSync('./avatars');
