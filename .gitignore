@@ -48,3 +48,4 @@ jspm_packages
 
 # Test Output
 avatars/
+.DS_Store
