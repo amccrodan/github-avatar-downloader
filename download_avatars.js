@@ -26,13 +26,13 @@ function getRepoContributors(repoOwner, repoName, cb) {
 function downloadImageByURL(url, filePath) {
 
   request.get(url)
-   .on('error', function (err) {
-     throw err;
-   })
-   .pipe(fs.createWriteStream(filePath))
-   .on('finish', function () {
-    console.log('Downloaded ' + filePath);
-   })
+    .on('error', function (err) {
+      throw err;
+    })
+    .pipe(fs.createWriteStream(filePath))
+    .on('finish', function () {
+      console.log('Downloaded ' + filePath);
+    });
 }
 
 
