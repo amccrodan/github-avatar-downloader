@@ -1,8 +1,9 @@
+require('dotenv').config();
 var request = require('request');
 var fs = require('fs');
 
-var GITHUB_USER = "amccrodan";
-var GITHUB_TOKEN = "581cc3110dadb29e6abeec829e6beb65f5b422a4";
+var GITHUB_USER = process.env.GITHUB_USER;
+var GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
 // Requests a JSON-formatted array of contributors to a certain repo on GitHub
 function getRepoContributors(repoOwner, repoName, cb) {
