@@ -6,8 +6,16 @@ var GITHUB_USER = "amccrodan";
 var GITHUB_TOKEN = "581cc3110dadb29e6abeec829e6beb65f5b422a4";
 
 function getRepoContributors(repoOwner, repoName, cb) {
-  var requestURL = 'https://'+ GITHUB_USER + ':' + GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors';
-  console.log(requestURL);
+  var options = {
+    url : 'https://'+ GITHUB_USER + ':' + GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors',
+    headers: {
+      'User-Agent' : "GitHub Avatar Downloader - Student Project"
+    }
+  }
+
+  request.get(options, function (error, response, body) {
+    console.log(response.body);
+  });
 }
 
 
