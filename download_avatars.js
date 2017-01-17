@@ -1,11 +1,6 @@
-require('dotenv').config();
 var request = require('request');
 var fs = require('fs');
 var get_contrib = require('./get-contributors');
-
-var GITHUB_USER = process.env.GITHUB_USER;
-var GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-
 
 // Downloads an image from a specific URL to the given filePath
 function downloadImageByURL(url, filePath) {
@@ -29,18 +24,6 @@ var myArgs = process.argv.slice(2);
 // Check to make sure two arguments have been passed in
 if (myArgs.length !== 2) {
   console.log('Please enter exactly 2 arguments, in the form <owner> <repo>.');
-  process.exit();
-}
-
-
-// ENV file validation
-if (!fs.existsSync('./.env')) {
-  console.log('The .env file containing user information does not exist.');
-  process.exit();
-}
-
-if (!GITHUB_USER || !GITHUB_TOKEN) {
-  console.log('Missing username or token in the .env file.');
   process.exit();
 }
 
