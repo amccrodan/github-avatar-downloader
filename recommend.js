@@ -6,7 +6,7 @@ var GITHUB_USER = process.env.GITHUB_USER;
 var GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
 
-function getStarredRepos (url, tallyObject) {
+function getStarredRepos (url) {
   var options = {
     url: url, //'https://' + GITHUB_USER + ':' + GITHUB_TOKEN + '@api.github.com/users/kvirani/starred',
     headers: {
@@ -15,11 +15,10 @@ function getStarredRepos (url, tallyObject) {
     json: true
   };
 
-  var starredRepos = [];
   request.get(options, function(err, response, body) {
     //console.log(response.headers);
     for (var i = 0; i < body.length; i++) {
-    tallyObject[body[i].full_name] = (!tallyObject[body[i].full_name]) ? 1 : tallyObject[body[i].full_name] + 1;
+
     }
   })
   .auth(null, null, true, GITHUB_TOKEN);
@@ -40,7 +39,7 @@ get_contrib.getRepoContributors(myArgs[0], myArgs[1], function(err, result) {
   var tallyObject = {};
 
   for (var i = 0; i < result.length; i++) {
-    getStarredRepos(result[i].starred_url.replace('{/owner}{/repo}', ''), tallyObject);
+    getStarredRepos(result[i].starred_url.replace('{/owner}{/repo}', ''));
   }
 
 });
