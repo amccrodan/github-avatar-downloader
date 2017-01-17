@@ -1,5 +1,6 @@
 require('dotenv').config();
 var request = require('request');
+var fs = require('fs');
 
 var GITHUB_USER = process.env.GITHUB_USER;
 var GITHUB_TOKEN = process.env.GITHUB_TOKEN;
@@ -35,6 +36,18 @@ function getRepoContributors(repoOwner, repoName, cb) {
     cb(error, JSON.parse(body));
 
   });
+}
+
+
+// ENV file validation
+if (!fs.existsSync('./.env')) {
+  console.log('The .env file containing user information does not exist.');
+  process.exit();
+}
+
+if (!GITHUB_USER || !GITHUB_TOKEN) {
+  console.log('Missing username or token in the .env file.');
+  process.exit();
 }
 
 module.exports = {
