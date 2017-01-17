@@ -40,9 +40,20 @@ var myArgs = process.argv.slice(2);
 
 // Check to make sure two arguments have been passed in
 if (myArgs.length !== 2) {
-  throw new Error('Please enter exactly 2 arguments, in the form <owner> <repo>.');
+  console.log('Please enter exactly 2 arguments, in the form <owner> <repo>.');
+  process.exit();
 }
 
+// ENV file validation
+if (!fs.existsSync('./.env')) {
+  console.log('The .env file containing user information does not exist.');
+  process.exit();
+}
+
+if (!GITHUB_USER || !GITHUB_TOKEN) {
+  console.log('Missing username or token in the .env file.');
+  process.exit();
+}
 
 // Call the main function with command line input
 getRepoContributors(myArgs[0], myArgs[1], function(err, response, body) {
@@ -56,6 +67,14 @@ getRepoContributors(myArgs[0], myArgs[1], function(err, response, body) {
     console.log(err);
     return;
   }
+
+  // Handle incorrect GitHub credentials
+  if (response.statusCode === 401) {
+    console.log("Unauthorized. Check accuracy of .env file username and token.");
+    return;
+  }
+
+  // Handle incorrect owner/repo input
   if (response.statusCode === 404) {
     console.log("The provided owner/repo combination was not found.");
     return;
