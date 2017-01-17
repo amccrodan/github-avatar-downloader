@@ -11,5 +11,7 @@ if (myArgs.length !== 2) {
 
 // Call the main function with command line input
 get_contrib.getRepoContributors(myArgs[0], myArgs[1], function(err, result) {
-  console.log(result);
+  for (var i = 0; i < result.length; i++) {
+    console.log(result[i].starred_url);
+  }
 });
