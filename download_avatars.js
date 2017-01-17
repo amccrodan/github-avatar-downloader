@@ -14,13 +14,7 @@ function getRepoContributors(repoOwner, repoName, cb) {
     }
   };
 
-  request.get(options, function (error, response, body) {
-    if (error) {
-      console.log(error);
-      return;
-    }
-    cb(error, JSON.parse(body));
-  });
+  request.get(options, cb);
 }
 
 // Downloads an image from a specific URL to the given filePath
@@ -51,12 +45,23 @@ if (myArgs.length !== 2) {
 
 
 // Call the main function with command line input
-getRepoContributors(myArgs[0], myArgs[1], function(err, result) {
+getRepoContributors(myArgs[0], myArgs[1], function(err, response, body) {
 
   // Check to see if avatars directory already exists or not
   if (!fs.existsSync('./avatars')) {
     fs.mkdirSync('./avatars');
   }
+
+  if (err) {
+    console.log(err);
+    return;
+  }
+  if (response.statusCode === 404) {
+    console.log("The provided owner/repo combination was not found.");
+    return;
+  }
+
+  result = JSON.parse(body);
 
   // Loop through each contributor and download their avatar to local folder
   for (var i = 0; i < result.length; i++) {
