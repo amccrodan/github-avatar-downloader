@@ -5,23 +5,23 @@ var request = require('request');
 var GITHUB_USER = process.env.GITHUB_USER;
 var GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
-function reportTop5(array) {
-  var tallyObj = {};
+function reportTop5(starArray) {
+  var tallyObject = {};
 
-  array.forEach(function(star) {
-    tallyObj[star] = (tallyObj[star] || 0) + 1;
+  starArray.forEach(function(star) {
+    tallyObject[star] = (tallyObject[star] || 0) + 1;
   });
 
-  keysSorted = Object.keys(tallyObj).sort(function(a, b) {
-    return tallyObj[b] - tallyObj[a];
+  keysSorted = Object.keys(tallyObject).sort(function(a, b) {
+    return tallyObject[b] - tallyObject[a];
   });
 
   for (var i = 0; i < 5; i++) {
-    console.log(`${keysSorted[i]} : ${tallyObj[keysSorted[i]]}`);
+    console.log(`[ ${tallyObject[keysSorted[i]]} stars ] ${keysSorted[i]}`);
   }
 }
 
-function getStarredRepos (url, array, counter, totalUsers) {
+function getStarredRepos (url, starArray, counter, totalUsers) {
   var options = {
     url: url,
     headers: {
@@ -33,14 +33,15 @@ function getStarredRepos (url, array, counter, totalUsers) {
   request.get(options, function(err, response, body) {
 
     for (var i = 0; i < body.length; i++) {
-      array.push(body[i].full_name);
+      starArray.push(body[i].full_name);
     }
 
     counter.count += 1;
     console.log(`${counter.count} / ${totalUsers}`);
 
     if (counter.count === totalUsers) {
-      reportTop5(array);
+      console.log(`${starArray.length} starred repos gathered.`);
+      reportTop5(starArray);
     }
   })
   .auth(null, null, true, GITHUB_TOKEN)
